@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { jwtDecode } from "jwt-decode";
 import formatDate from "../utils/formatDate";
-import Button from "./Button";
+
+import Header from "./Header";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -10,15 +10,13 @@ type Post = {
   title: string;
   content: string;
   publishedAt: string;
-};
-
-type DecodedToken = {
-  username: string;
+  _count: {
+    Comment: number;
+  };
 };
 
 function Home() {
   const [posts, setPosts] = useState<Post[]>([]);
-  const [username, setUsername] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -31,60 +29,31 @@ function Home() {
       const data = await res.json();
       setPosts(data);
     };
-
-    const token = localStorage.getItem("token");
-    if (token) {
-      const decoded = jwtDecode<DecodedToken>(token);
-      setUsername(decoded.username);
-    }
-
     fetchPosts();
   }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setUsername(null);
-  };
 
   return (
     <>
       <div className="mx-auto">
-        <nav className="flex justify-between items-center py-3">
-          <div>
-            <p className="font-bold text-xl text-accent-100">
-              <a href="/">⦾ AimPoint</a>
-            </p>
-          </div>
-          <ul>
-            <li>
-              {username ? (
-                <div className="space-x-3">
-                  <span className="text-accent-100">Hello, {username}!</span>
-                  <Button className="bg-primary-800" onClick={handleLogout}>
-                    Log out
-                  </Button>
-                </div>
-              ) : (
-                <Button href="/login" className="bg-primary-800">
-                  Login
-                </Button>
-              )}
-            </li>
-          </ul>
-        </nav>
+        <Header />
         <main>
           <ul className="grid grid-cols-3 gap-3">
             {posts.map((post: Post) => (
               <li key={post.id}>
-                <div className="bg-primary-800 p-3 rounded-lg border border-solid border-primary-300">
-                  <span className="text-primary-200">
-                    {formatDate(post.publishedAt)}
-                  </span>
-                  <h1 className="text-accent-100 text-2xl font-semibold ">
-                    {post.title}
-                  </h1>
-                  <p className="text-primary-200">{post.content}</p>
-                </div>
+                <a href={`/posts/${post.id}`}>
+                  <div className="bg-primary-800 p-3 rounded-lg border border-solid border-primary-300">
+                    <span className="text-primary-200 text-sm">
+                      {formatDate(post.publishedAt)}
+                    </span>
+                    <h1 className="text-accent-100 text-2xl font-semibold ">
+                      {post.title}
+                    </h1>
+                    <p className="text-primary-200">{post.content}</p>
+                    <p className="text-primary-200 mt-3 text-sm">
+                      {post._count.Comment} comments
+                    </p>
+                  </div>
+                </a>
               </li>
             ))}
           </ul>
