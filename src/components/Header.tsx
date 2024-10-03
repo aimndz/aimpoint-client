@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 
 import Button from "./Button";
+import { useNavigate } from "react-router-dom";
 
 type Header = {
   username: string | null;
@@ -9,23 +10,33 @@ type Header = {
 };
 
 type DecodedToken = {
-  username: string;
+  user: {
+    id: string;
+    username: string;
+    role: string;
+  };
 };
 
 const Header = () => {
-  const [username, setUsername] = useState<string | null>(null);
+  const [user, setUser] = useState<DecodedToken["user"] | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       const decoded = jwtDecode<DecodedToken>(token);
-      setUsername(decoded.username);
+      console.log(decoded);
+      setUser(decoded.user);
     }
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    setUsername(null);
+    setUser(null);
+  };
+
+  const handleAdmin = () => {
+    navigate("/admin");
   };
 
   return (
@@ -38,9 +49,14 @@ const Header = () => {
         </div>
         <ul>
           <li>
-            {username ? (
+            {user ? (
               <div className="space-x-3">
-                <span className="text-accent-100">Hello, {username}!</span>
+                <span className="text-accent-100">Hello, {user.username}!</span>
+                {user.role === "ADMIN" && (
+                  <Button className="bg-primary-800" onClick={handleAdmin}>
+                    Admin
+                  </Button>
+                )}
                 <Button className="bg-primary-800" onClick={handleLogout}>
                   Log out
                 </Button>

@@ -7,6 +7,7 @@ import Layout from "./components/Layout";
 import Signup from "./components/Signup";
 import Post from "./components/Post";
 import { useEffect } from "react";
+import AdminDashboard from "./components/AdminDashboard";
 
 function App() {
   useEffect(() => {
@@ -24,6 +25,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/sign-up" element={<Signup />} />
+          <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/posts/:id" element={<Post />} />
         </Routes>
       </Layout>
