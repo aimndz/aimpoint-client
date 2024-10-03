@@ -121,6 +121,29 @@ const Post = () => {
     }
   };
 
+  const handleDelete = async (commentId: string) => {
+    const res = await fetch(`${apiUrl}/posts/${id}/comments/${commentId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+
+    if (res.status === 401) {
+      // Redirect to login if not authenticated
+      navigate("/login");
+    }
+
+    if (res.ok) {
+      setComments(comments.filter((comment) => comment.id !== commentId));
+    }
+  };
+
+  const handleEdit = async (commentId: string) => {
+    // TODO: Implement edit comment functionality
+  };
+
   return (
     <div>
       <Header />
@@ -150,7 +173,13 @@ const Post = () => {
             </form>
             {comments.length > 0 &&
               comments.map((comment) => (
-                <Comment key={comment.id} comment={comment} />
+                <Comment
+                  key={comment.id}
+                  comment={comment}
+                  loggedInUser={user}
+                  onDelete={handleDelete}
+                  onEdit={handleEdit}
+                />
               ))}
           </div>
         </div>

@@ -10,9 +10,15 @@ type CommentProps = {
       username: string;
     };
   };
+  loggedInUser: {
+    id: string;
+    username: string;
+  };
+  onDelete: (id: string) => void;
+  onEdit: (id: string) => void;
 };
 
-function Comment({ comment }: CommentProps) {
+function Comment({ comment, loggedInUser, onEdit, onDelete }: CommentProps) {
   return (
     <div className="border border-solid border-primary-300 p-3 rounded-lg mt-5 flex justify-between">
       <div>
@@ -22,6 +28,22 @@ function Comment({ comment }: CommentProps) {
         </p>
         <p className="text-primary-100">{comment.text}</p>
       </div>
+      {comment.user.id === loggedInUser?.id ? (
+        <div className="flex gap-3">
+          <button
+            className="text-sm hover:underline"
+            onClick={() => onEdit(comment.id)}
+          >
+            Edit
+          </button>
+          <button
+            className="text-sm text-red-600 hover:underline"
+            onClick={() => onDelete(comment.id)}
+          >
+            Delete
+          </button>
+        </div>
+      ) : null}
     </div>
   );
 }
