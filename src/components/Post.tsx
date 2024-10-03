@@ -176,7 +176,7 @@ const Post = () => {
                 <Comment
                   key={comment.id}
                   comment={comment}
-                  loggedInUser={user}
+                  loggedInUser={user ?? { id: "", username: "" }}
                   onDelete={handleDelete}
                   onEdit={handleEdit}
                 />
