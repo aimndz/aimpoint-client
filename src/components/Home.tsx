@@ -36,6 +36,9 @@ function Home() {
     <>
       <div className="mx-auto">
         <Header />
+        <h1 className="text-3xl font-semibold my-5">
+          Blogs <span className="font-normal">({posts.length})</span>
+        </h1>
         <main>
           <ul className="grid grid-cols-3 gap-3">
             {posts.map((post: Post) => (
