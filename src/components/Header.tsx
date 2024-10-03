@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 
 import Button from "./Button";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 type Header = {
   username: string | null;
@@ -19,13 +19,11 @@ type DecodedToken = {
 
 const Header = () => {
   const [user, setUser] = useState<DecodedToken["user"] | null>(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       const decoded = jwtDecode<DecodedToken>(token);
-      console.log(decoded);
       setUser(decoded.user);
     }
   }, []);
@@ -35,16 +33,12 @@ const Header = () => {
     setUser(null);
   };
 
-  const handleAdmin = () => {
-    navigate("/admin");
-  };
-
   return (
     <header>
       <nav className="flex justify-between items-center py-3">
         <div>
           <p className="font-bold text-xl text-accent-100">
-            <a href="/">⦾ AimPoint</a>
+            <Link to="/">⦾ AimPoint</Link>
           </p>
         </div>
         <ul>
@@ -53,8 +47,8 @@ const Header = () => {
               <div className="space-x-3">
                 <span className="text-accent-100">Hello, {user.username}!</span>
                 {user.role === "ADMIN" && (
-                  <Button className="bg-primary-800" onClick={handleAdmin}>
-                    Admin
+                  <Button className="bg-primary-800">
+                    <Link to="/admin">Admin</Link>
                   </Button>
                 )}
                 <Button className="bg-primary-800" onClick={handleLogout}>
@@ -62,9 +56,9 @@ const Header = () => {
                 </Button>
               </div>
             ) : (
-              <Button href="/login" className="bg-primary-800">
-                Login
-              </Button>
+              <Link to="/login">
+                <Button className="bg-primary-800">Login</Button>
+              </Link>
             )}
           </li>
         </ul>

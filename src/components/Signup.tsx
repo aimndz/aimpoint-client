@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import Input from "./Input";
 import Button from "./Button";
@@ -69,7 +69,7 @@ const Signup = () => {
   return (
     <div className="flex flex-col justify-center items-center h-screen">
       <h1 className="font-bold text-3xl text-accent-100 mb-10">
-        <a href="/">⦾ AimPoint</a>
+        <Link to="/">⦾ AimPoint</Link>
       </h1>
       <h2 className="font-bold text-2xl">Signup</h2>
       <form
@@ -130,9 +130,9 @@ const Signup = () => {
           Sign up
         </Button>
       </form>
-      <a href="/login" className="mt-3 text-primary-200 hover:underline">
+      <Link to="/login" className="mt-3 text-primary-200 hover:underline">
         Already have an account? Login
-      </a>
+      </Link>
     </div>
   );
 };

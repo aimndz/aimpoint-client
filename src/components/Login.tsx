@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import Input from "./Input";
 import Button from "./Button";
@@ -47,7 +47,7 @@ const Login = () => {
   return (
     <div className="flex flex-col justify-center items-center h-screen">
       <h1 className="font-bold text-3xl text-accent-100 mb-10">
-        <a href="/">⦾ AimPoint</a>
+        <Link to="/">⦾ AimPoint</Link>
       </h1>
       <h2 className="font-bold text-2xl">Login</h2>
       <form
@@ -81,9 +81,9 @@ const Login = () => {
           Login
         </Button>
       </form>
-      <a href="/sign-up" className="mt-3 text-primary-200 hover:underline">
+      <Link to="/sign-up" className="mt-3 text-primary-200 hover:underline">
         Don't have an account? Sign up
-      </a>
+      </Link>
     </div>
   );
 };

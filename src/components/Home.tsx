@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import formatDate from "../utils/formatDate";
 
 import Header from "./Header";
+import { Link } from "react-router-dom";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -43,7 +44,7 @@ function Home() {
           <ul className="grid grid-cols-3 gap-3">
             {posts.map((post: Post) => (
               <li key={post.id}>
-                <a href={`/posts/${post.id}`}>
+                <Link to={`/posts/${post.id}`}>
                   <div className="bg-primary-800 p-3 rounded-lg border border-solid border-primary-300">
                     <span className="text-primary-200 text-sm">
                       {formatDate(post.publishedAt)}
@@ -56,7 +57,7 @@ function Home() {
                       {post._count.Comment} comments
                     </p>
                   </div>
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
