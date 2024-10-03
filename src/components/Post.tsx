@@ -6,6 +6,7 @@ import formatDate from "../utils/formatDate";
 import Header from "./Header";
 import Button from "./Button";
 import Comment from "./Comment";
+import EditComment from "./EditComment";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -40,6 +41,7 @@ const Post = () => {
   const [post, setPost] = useState<Post | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [userComment, setUserComment] = useState("");
+  const [editingId, setEditingId] = useState("");
   const navigate = useNavigate();
 
   // Get username from token
@@ -140,8 +142,45 @@ const Post = () => {
     }
   };
 
-  const handleEdit = async (commentId: string) => {
-    // TODO: Implement edit comment functionality
+  const handleShowEdit = (commentId: string) => {
+    setEditingId(commentId);
+  };
+
+  const handleCancel = () => {
+    setEditingId("");
+  };
+
+  const handleSaveEdit = async (commentId: string, text: string) => {
+    try {
+      const res = await fetch(`${apiUrl}/posts/${id}/comments/${commentId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ text }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to update comment");
+      }
+
+      const data = await res.json();
+
+      const updatedComment = {
+        ...data,
+        user: { id: user?.id, username: user?.username },
+      };
+
+      const updatedComments = comments.map((comment) =>
+        comment.id === commentId ? updatedComment : comment
+      );
+
+      setComments(updatedComments);
+      setEditingId("");
+    } catch (error) {
+      console.error("Error updating comment:", error);
+    }
   };
 
   return (
@@ -172,15 +211,25 @@ const Post = () => {
               <Button type="submit">Comment</Button>
             </form>
             {comments.length > 0 &&
-              comments.map((comment) => (
-                <Comment
-                  key={comment.id}
-                  comment={comment}
-                  loggedInUser={user ?? { id: "", username: "" }}
-                  onDelete={handleDelete}
-                  onEdit={handleEdit}
-                />
-              ))}
+              comments.map((comment) =>
+                editingId === comment.id ? (
+                  <EditComment
+                    key={comment.id}
+                    comment={comment}
+                    loggedInUser={user ?? { id: "", username: "" }}
+                    onCancel={handleCancel}
+                    onSaveEdit={handleSaveEdit}
+                  />
+                ) : (
+                  <Comment
+                    key={comment.id}
+                    comment={comment}
+                    loggedInUser={user ?? { id: "", username: "" }}
+                    onDelete={handleDelete}
+                    onShowEdit={handleShowEdit}
+                  />
+                )
+              )}
           </div>
         </div>
       </main>

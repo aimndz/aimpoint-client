@@ -15,10 +15,15 @@ type CommentProps = {
     username: string;
   };
   onDelete: (id: string) => void;
-  onEdit: (id: string) => void;
+  onShowEdit: (id: string) => void;
 };
 
-function Comment({ comment, loggedInUser, onEdit, onDelete }: CommentProps) {
+function Comment({
+  comment,
+  loggedInUser,
+  onShowEdit,
+  onDelete,
+}: CommentProps) {
   return (
     <div className="border border-solid border-primary-300 p-3 rounded-lg mt-5 flex justify-between">
       <div>
@@ -26,13 +31,14 @@ function Comment({ comment, loggedInUser, onEdit, onDelete }: CommentProps) {
           <span className="font-bold">{comment.user?.username}</span> •{" "}
           <span>{formatDate(comment.createdAt)}</span>
         </p>
+        {/* <Input value={comment.text} /> */}
         <p className="text-primary-100">{comment.text}</p>
       </div>
       {comment.user.id === loggedInUser?.id ? (
         <div className="flex gap-3">
           <button
             className="text-sm hover:underline"
-            onClick={() => onEdit(comment.id)}
+            onClick={() => onShowEdit(comment.id)}
           >
             Edit
           </button>
