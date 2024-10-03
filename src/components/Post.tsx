@@ -5,6 +5,7 @@ import formatDate from "../utils/formatDate";
 
 import Header from "./Header";
 import Button from "./Button";
+import Comment from "./Comment";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -131,11 +132,11 @@ const Post = () => {
           {post?.title}
         </h1>
         <p>{post?.content}</p>
-        <div className=" py-10">
+        <div className="py-10">
           <h2 className="text-primary-100 font-bold text-xl">
             {`${comments?.length} Comments`}
           </h2>
-          <ul>
+          <div>
             <form action="POST" onSubmit={handleSubmitComment}>
               <textarea
                 name="comment"
@@ -149,22 +150,9 @@ const Post = () => {
             </form>
             {comments.length > 0 &&
               comments.map((comment) => (
-                <li
-                  key={comment.id}
-                  className="border border-solid border-primary-300 p-3 rounded-lg mt-5 flex justify-between"
-                >
-                  <div>
-                    <p className="text-primary-200 text-sm">
-                      <span className="font-bold">
-                        {comment.user?.username}
-                      </span>{" "}
-                      • <span>{formatDate(comment.createdAt)}</span>
-                    </p>
-                    <p className="text-primary-100">{comment.text}</p>
-                  </div>
-                </li>
+                <Comment key={comment.id} comment={comment} />
               ))}
-          </ul>
+          </div>
         </div>
       </main>
     </div>
