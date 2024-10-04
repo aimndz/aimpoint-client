@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import formatDate from "../utils/formatDate";
+import formatDate from "../../utils/formatDate";
 
-import Header from "./Header";
+import Header from "../Header";
 import { Link } from "react-router-dom";
 
 const apiUrl = import.meta.env.VITE_API_URL;

@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import formatDate from "../utils/formatDate";
+import formatDate from "../../utils/formatDate";
 
-import Header from "./Header";
-import Button from "./Button";
-import Comment from "./Comment";
-import EditComment from "./EditComment";
+import Header from "../Header";
+import Button from "../Button";
+import Comment from "../Comment";
+import EditComment from "../EditComment";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
