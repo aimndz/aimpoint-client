@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import formatDate from "../../utils/formatDate";
+import { jwtDecode } from "jwt-decode";
 
 import Header from "../Header";
-import { Link } from "react-router-dom";
+import Button from "../Button";
+import PostList from "../PostList";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -16,8 +17,30 @@ type Post = {
   };
 };
 
+type DecodedToken = {
+  user: {
+    id: string;
+    username: string;
+    role: string;
+  };
+};
+
 function Home() {
   const [posts, setPosts] = useState<Post[]>([]);
+  const [filter, setFilter] = useState("published");
+  const [user, setUser] = useState<DecodedToken["user"] | null>(null);
+
+  const filteredPosts = posts.filter((post) =>
+    filter === "published" ? post.publishedAt : !post.publishedAt
+  );
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decoded = jwtDecode<DecodedToken>(token);
+      setUser(decoded.user);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -25,6 +48,7 @@ function Home() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       const data = await res.json();
@@ -33,6 +57,14 @@ function Home() {
     fetchPosts();
   }, []);
 
+  const handleSetFilter = () => {
+    if (filter === "published") {
+      setFilter("unpublished");
+    } else {
+      setFilter("published");
+    }
+  };
+
   return (
     <>
       <div className="mx-auto">
@@ -40,26 +72,26 @@ function Home() {
         <h1 className="text-3xl font-semibold my-5">
           Blogs <span className="font-normal">({posts.length})</span>
         </h1>
+        {user?.role === "ADMIN" && (
+          <div className="space-x-3 mb-3">
+            <Button
+              className={filter === "published" ? "bg-primary-800" : ""}
+              onClick={handleSetFilter}
+            >
+              Published
+            </Button>
+            <Button
+              className={filter === "unpublished" ? "bg-primary-800" : ""}
+              onClick={handleSetFilter}
+            >
+              Unpublished
+            </Button>
+          </div>
+        )}
+
         <main>
           <ul className="grid grid-cols-3 gap-3">
-            {posts.map((post: Post) => (
-              <li key={post.id}>
-                <Link to={`/posts/${post.id}`}>
-                  <div className="bg-primary-800 p-3 rounded-lg border border-solid border-primary-300">
-                    <span className="text-primary-200 text-sm">
-                      {formatDate(post.publishedAt)}
-                    </span>
-                    <h1 className="text-accent-100 text-2xl font-semibold ">
-                      {post.title}
-                    </h1>
-                    <p className="text-primary-200">{post.content}</p>
-                    <p className="text-primary-200 mt-3 text-sm">
-                      {post._count.Comment} comments
-                    </p>
-                  </div>
-                </Link>
-              </li>
-            ))}
+            <PostList filteredPosts={filteredPosts} />
           </ul>
         </main>
       </div>
