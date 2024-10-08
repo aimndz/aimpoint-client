@@ -1,16 +1,16 @@
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import Header from "../Header";
 import Input from "../Input";
 import Button from "../Button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const TinyMCE_URL = import.meta.env.VITE_TINYMCE_API_KEY;
 const apiUrl = import.meta.env.VITE_API_URL;
 
 // TypeScript version of the AdminDashboard component
 function ContentEditor() {
-  // Create a reference for the TinyMCE editor with the correct type
+  const { id } = useParams();
   const editorRef = useRef<any>(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -18,11 +18,33 @@ function ContentEditor() {
 
   const navigate = useNavigate();
 
+  // Fetch post by id
+  useEffect(() => {
+    const fetchPost = async () => {
+      const res = await fetch(`${apiUrl}/posts/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await res.json();
+      setTitle(data.title);
+      setContent(data.content);
+    };
+
+    fetchPost();
+  }, [id]);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const res = await fetch(`${apiUrl}/posts`, {
-      method: "POST",
+    const isEditing = id ? true : false;
+    const method = isEditing ? "PUT" : "POST";
+
+    const apiEndpoint = isEditing ? `${apiUrl}/posts/${id}` : `${apiUrl}/posts`;
+
+    const res = await fetch(apiEndpoint, {
+      method: method,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -58,7 +80,7 @@ function ContentEditor() {
         <Editor
           apiKey={TinyMCE_URL}
           onInit={(evt, editor) => (editorRef.current = editor)}
-          initialValue="<p>Enter your blog content here.</p>"
+          value={content}
           onEditorChange={(content) => setContent(content)}
           init={{
             height: 500,

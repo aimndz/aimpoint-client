@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import formatDate from "../../utils/formatDate";
 import parse from "html-react-parser";
@@ -213,6 +213,10 @@ const Post = () => {
     }
   };
 
+  const handleEditPost = async () => {
+    console.log("Edit post");
+  };
+
   const handleDeletePost = async () => {
     const res = await fetch(`${apiUrl}/posts/${id}`, {
       method: "DELETE",
@@ -244,9 +248,14 @@ const Post = () => {
             {post?.title}
           </h1>
           {user?.role === "ADMIN" && (
-            <Button onClick={handlePostPublication}>
-              {post?.publishedAt ? "Unpublished" : "Published"}
-            </Button>
+            <div className="flex gap-3">
+              <Button onClick={handlePostPublication}>
+                {post?.publishedAt ? "Unpublished" : "Published"}
+              </Button>
+              <Link to="edit">
+                <Button onClick={handleEditPost}>Edit</Button>
+              </Link>
+            </div>
           )}
         </div>
         <div>{parse(post?.content || "")}</div>
