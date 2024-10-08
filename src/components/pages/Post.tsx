@@ -31,13 +31,16 @@ type Comment = {
 };
 
 type DecodedToken = {
-  id: string;
-  username: string;
+  user: {
+    id: string;
+    username: string;
+    role: string;
+  };
 };
 
 const Post = () => {
   const { id } = useParams();
-  const [user, setUser] = useState<DecodedToken | null>(null);
+  const [user, setUser] = useState<DecodedToken["user"] | null>(null);
   const [post, setPost] = useState<Post | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [userComment, setUserComment] = useState("");
@@ -49,7 +52,7 @@ const Post = () => {
     const token = localStorage.getItem("token");
     if (token) {
       const decoded = jwtDecode<DecodedToken>(token);
-      setUser({ id: decoded.id, username: decoded.username });
+      setUser(decoded.user);
     }
   }, []);
 
@@ -220,10 +223,10 @@ const Post = () => {
           <h1 className="text-accent-100 font-bold text-3xl block">
             {post?.title}
           </h1>
-          {post?.publishedAt ? (
-            <Button onClick={handlePostPublication}>Unpublished</Button>
-          ) : (
-            <Button onClick={handlePostPublication}>Published</Button>
+          {user?.role === "ADMIN" && (
+            <Button onClick={handlePostPublication}>
+              {post?.publishedAt ? "Unpublished" : "Published"}
+            </Button>
           )}
         </div>
         <p>{post?.content}</p>
