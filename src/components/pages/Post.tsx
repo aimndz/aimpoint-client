@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import formatDate from "../../utils/formatDate";
+import parse from "html-react-parser";
 
 import Header from "../Header";
 import Button from "../Button";
@@ -229,7 +230,7 @@ const Post = () => {
             </Button>
           )}
         </div>
-        <p>{post?.content}</p>
+        <div>{parse(post?.content || "")}</div>
         <div className="py-10">
           <h2 className="text-primary-100 font-bold text-xl">
             {`${comments?.length} Comments`}

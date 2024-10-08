@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import formatDate from "../utils/formatDate";
+import parse from "html-react-parser";
 
 type Post = {
   id: string;
@@ -30,7 +31,7 @@ const PostList = ({ filteredPosts }: PostListProps) => {
               <h1 className="text-accent-100 text-2xl font-semibold ">
                 {post.title}
               </h1>
-              <p className="text-primary-200">{post.content}</p>
+              <div className="text-primary-200">{parse(post.content)}</div>
               <p className="text-primary-200 mt-3 text-sm">
                 {post._count.Comment} comments
               </p>
