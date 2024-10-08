@@ -123,6 +123,32 @@ const Post = () => {
     }
   };
 
+  const handlePostPublication = async () => {
+    const res = await fetch(`${apiUrl}/posts/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({
+        title: post?.title,
+        content: post?.content,
+        isPublished: post?.publishedAt ? false : true,
+      }),
+    });
+
+    if (res.status === 401) {
+      // Redirect to login if not authenticated
+      navigate("/login");
+    }
+
+    if (res.ok) {
+      const data = await res.json();
+      setPost(data);
+      console.log(data);
+    }
+  };
+
   const handleDelete = async (commentId: string) => {
     const res = await fetch(`${apiUrl}/posts/${id}/comments/${commentId}`, {
       method: "DELETE",
@@ -190,9 +216,16 @@ const Post = () => {
         <p className="italic text-primary-200 text-sm">
           {post?.publishedAt && formatDate(post?.publishedAt)}
         </p>
-        <h1 className="text-accent-100 font-bold text-3xl mb-10">
-          {post?.title}
-        </h1>
+        <div className="flex justify-between items-center mb-10">
+          <h1 className="text-accent-100 font-bold text-3xl block">
+            {post?.title}
+          </h1>
+          {post?.publishedAt ? (
+            <Button onClick={handlePostPublication}>Unpublished</Button>
+          ) : (
+            <Button onClick={handlePostPublication}>Published</Button>
+          )}
+        </div>
         <p>{post?.content}</p>
         <div className="py-10">
           <h2 className="text-primary-100 font-bold text-xl">
