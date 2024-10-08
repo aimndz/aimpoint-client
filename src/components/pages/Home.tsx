@@ -4,6 +4,7 @@ import { jwtDecode } from "jwt-decode";
 import Header from "../Header";
 import Button from "../Button";
 import PostList from "../PostList";
+import { Link } from "react-router-dom";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -73,19 +74,24 @@ function Home() {
           Blogs <span className="font-normal">({posts.length})</span>
         </h1>
         {user?.role === "ADMIN" && (
-          <div className="space-x-3 mb-3">
-            <Button
-              className={filter === "published" ? "bg-primary-800" : ""}
-              onClick={handleSetFilter}
-            >
-              Published
-            </Button>
-            <Button
-              className={filter === "unpublished" ? "bg-primary-800" : ""}
-              onClick={handleSetFilter}
-            >
-              Unpublished
-            </Button>
+          <div className="flex justify-between">
+            <div className="space-x-3 mb-3">
+              <Button
+                className={filter === "published" ? "bg-primary-800" : ""}
+                onClick={handleSetFilter}
+              >
+                Published
+              </Button>
+              <Button
+                className={filter === "unpublished" ? "bg-primary-800" : ""}
+                onClick={handleSetFilter}
+              >
+                Unpublished
+              </Button>
+            </div>
+            <Link to="create">
+              <Button className="bg-primary-800">+ Create</Button>
+            </Link>
           </div>
         )}
 
