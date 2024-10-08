@@ -46,11 +46,6 @@ const Header = () => {
             {user ? (
               <div className="space-x-3">
                 <span className="text-accent-100">Hello, {user.username}!</span>
-                {user.role === "ADMIN" && (
-                  <Button className="bg-primary-800">
-                    <Link to="/admin">Admin</Link>
-                  </Button>
-                )}
                 <Button className="bg-primary-800" onClick={handleLogout}>
                   Log out
                 </Button>
