@@ -9,6 +9,8 @@ import Button from "../Button";
 import Comment from "../Comment";
 import EditComment from "../EditComment";
 
+import styles from "./Post.module.css";
+
 const apiUrl = import.meta.env.VITE_API_URL;
 
 type Post = {
@@ -258,7 +260,9 @@ const Post = () => {
             </div>
           )}
         </div>
-        <div>{parse(post?.content || "")}</div>
+        <div className={styles.contentContainer}>
+          {parse(post?.content || "")}
+        </div>
 
         <div className="flex justify-end mt-3">
           <Button
