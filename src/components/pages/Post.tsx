@@ -213,6 +213,25 @@ const Post = () => {
     }
   };
 
+  const handleDeletePost = async () => {
+    const res = await fetch(`${apiUrl}/posts/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+
+    if (res.status === 401) {
+      // Redirect to login if not authenticated
+      navigate("/login");
+    }
+
+    if (res.ok) {
+      navigate("/");
+    }
+  };
+
   return (
     <div>
       <Header />
@@ -231,6 +250,16 @@ const Post = () => {
           )}
         </div>
         <div>{parse(post?.content || "")}</div>
+
+        <div className="flex justify-end mt-3">
+          <Button
+            className="bg-red-500 text-primary-100 font-semibold"
+            onClick={handleDeletePost}
+          >
+            Delete
+          </Button>
+        </div>
+
         <div className="py-10">
           <h2 className="text-primary-100 font-bold text-xl">
             {`${comments?.length} Comments`}
