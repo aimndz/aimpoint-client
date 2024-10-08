@@ -265,12 +265,14 @@ const Post = () => {
         </div>
 
         <div className="flex justify-end mt-3">
-          <Button
-            className="bg-red-500 text-primary-100 font-semibold"
-            onClick={handleDeletePost}
-          >
-            Delete
-          </Button>
+          {user?.role === "ADMIN" && (
+            <Button
+              className="bg-red-500 text-primary-100 font-semibold"
+              onClick={handleDeletePost}
+            >
+              Delete
+            </Button>
+          )}
         </div>
 
         <div className="py-10">
