@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import formatDate from "../utils/formatDate";
+import formatDate from "../../utils/formatDate";
+import parse from "html-react-parser";
 
-import Header from "./Header";
-import Button from "./Button";
-import Comment from "./Comment";
-import EditComment from "./EditComment";
+import Header from "../Header";
+import Button from "../Button";
+import Comment from "../Comment";
+import EditComment from "../EditComment";
+
+import styles from "./Post.module.css";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -31,13 +34,16 @@ type Comment = {
 };
 
 type DecodedToken = {
-  id: string;
-  username: string;
+  user: {
+    id: string;
+    username: string;
+    role: string;
+  };
 };
 
 const Post = () => {
   const { id } = useParams();
-  const [user, setUser] = useState<DecodedToken | null>(null);
+  const [user, setUser] = useState<DecodedToken["user"] | null>(null);
   const [post, setPost] = useState<Post | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [userComment, setUserComment] = useState("");
@@ -49,7 +55,7 @@ const Post = () => {
     const token = localStorage.getItem("token");
     if (token) {
       const decoded = jwtDecode<DecodedToken>(token);
-      setUser({ id: decoded.id, username: decoded.username });
+      setUser(decoded.user);
     }
   }, []);
 
@@ -123,6 +129,32 @@ const Post = () => {
     }
   };
 
+  const handlePostPublication = async () => {
+    const res = await fetch(`${apiUrl}/posts/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({
+        title: post?.title,
+        content: post?.content,
+        isPublished: post?.publishedAt ? false : true,
+      }),
+    });
+
+    if (res.status === 401) {
+      // Redirect to login if not authenticated
+      navigate("/login");
+    }
+
+    if (res.ok) {
+      const data = await res.json();
+      setPost(data);
+      console.log(data);
+    }
+  };
+
   const handleDelete = async (commentId: string) => {
     const res = await fetch(`${apiUrl}/posts/${id}/comments/${commentId}`, {
       method: "DELETE",
@@ -183,6 +215,29 @@ const Post = () => {
     }
   };
 
+  const handleEditPost = async () => {
+    console.log("Edit post");
+  };
+
+  const handleDeletePost = async () => {
+    const res = await fetch(`${apiUrl}/posts/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+
+    if (res.status === 401) {
+      // Redirect to login if not authenticated
+      navigate("/login");
+    }
+
+    if (res.ok) {
+      navigate("/");
+    }
+  };
+
   return (
     <div>
       <Header />
@@ -190,10 +245,36 @@ const Post = () => {
         <p className="italic text-primary-200 text-sm">
           {post?.publishedAt && formatDate(post?.publishedAt)}
         </p>
-        <h1 className="text-accent-100 font-bold text-3xl mb-10">
-          {post?.title}
-        </h1>
-        <p>{post?.content}</p>
+        <div className="flex justify-between items-center mb-10">
+          <h1 className="text-accent-100 font-bold text-3xl block">
+            {post?.title}
+          </h1>
+          {user?.role === "ADMIN" && (
+            <div className="flex gap-3">
+              <Button onClick={handlePostPublication}>
+                {post?.publishedAt ? "Unpublished" : "Published"}
+              </Button>
+              <Link to="edit">
+                <Button onClick={handleEditPost}>Edit</Button>
+              </Link>
+            </div>
+          )}
+        </div>
+        <div className={styles.contentContainer}>
+          {parse(post?.content || "")}
+        </div>
+
+        <div className="flex justify-end mt-3">
+          {user?.role === "ADMIN" && (
+            <Button
+              className="bg-red-500 text-primary-100 font-semibold"
+              onClick={handleDeletePost}
+            >
+              Delete
+            </Button>
+          )}
+        </div>
+
         <div className="py-10">
           <h2 className="text-primary-100 font-bold text-xl">
             {`${comments?.length} Comments`}

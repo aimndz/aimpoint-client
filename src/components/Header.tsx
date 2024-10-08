@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 
 import Button from "./Button";
+import { Link } from "react-router-dom";
 
 type Header = {
   username: string | null;
@@ -9,23 +10,27 @@ type Header = {
 };
 
 type DecodedToken = {
-  username: string;
+  user: {
+    id: string;
+    username: string;
+    role: string;
+  };
 };
 
 const Header = () => {
-  const [username, setUsername] = useState<string | null>(null);
+  const [user, setUser] = useState<DecodedToken["user"] | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       const decoded = jwtDecode<DecodedToken>(token);
-      setUsername(decoded.username);
+      setUser(decoded.user);
     }
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    setUsername(null);
+    setUser(null);
   };
 
   return (
@@ -33,22 +38,22 @@ const Header = () => {
       <nav className="flex justify-between items-center py-3">
         <div>
           <p className="font-bold text-xl text-accent-100">
-            <a href="/">⦾ AimPoint</a>
+            <Link to="/">⦾ AimPoint</Link>
           </p>
         </div>
         <ul>
           <li>
-            {username ? (
+            {user ? (
               <div className="space-x-3">
-                <span className="text-accent-100">Hello, {username}!</span>
+                <span className="text-accent-100">Hello, {user.username}!</span>
                 <Button className="bg-primary-800" onClick={handleLogout}>
                   Log out
                 </Button>
               </div>
             ) : (
-              <Button href="/login" className="bg-primary-800">
-                Login
-              </Button>
+              <Link to="/login">
+                <Button className="bg-primary-800">Login</Button>
+              </Link>
             )}
           </li>
         </ul>
