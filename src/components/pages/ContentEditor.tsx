@@ -79,7 +79,7 @@ function ContentEditor() {
         <h2>Content</h2>
         <Editor
           apiKey={TinyMCE_URL}
-          onInit={(evt, editor) => (editorRef.current = editor)}
+          onInit={(_, editor) => (editorRef.current = editor)}
           value={content}
           onEditorChange={(content) => setContent(content)}
           init={{
