@@ -80,8 +80,8 @@ function Home() {
           </em>
         </span>
         {user?.role === "ADMIN" && (
-          <div className="flex justify-between">
-            <div className="space-x-3 mb-3">
+          <div className="flex justify-between mt-5">
+            <div className="space-x-3">
               <Button
                 className={filter === "published" ? "bg-primary-800" : ""}
                 onClick={handleSetFilter}
