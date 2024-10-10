@@ -71,8 +71,14 @@ function Home() {
       <div className="mx-auto">
         <Header />
         <h1 className="text-3xl font-semibold my-5">
-          Blogs <span className="font-normal">({posts.length})</span>
+          Blogs <span className="font-normal">({posts.length})</span>{" "}
         </h1>
+        <span className="text-sm text-primary-200">
+          <em>
+            <strong>Disclaimer:</strong> All content on this blog is generated
+            by AI and is intended for educational purposes only.
+          </em>
+        </span>
         {user?.role === "ADMIN" && (
           <div className="flex justify-between">
             <div className="space-x-3 mb-3">
