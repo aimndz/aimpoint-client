@@ -1,50 +1,29 @@
-# React + TypeScript + Vite
+# AimPoint
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Description
+  Aimpoint is a blog website that allows users to read and comment on blog posts, while providing an admin side to create and manage content.
+  
+  [🌐 Live Preview Here](https://aimpoint.vercel.app)
+  
+## Features
+  ### Client Side:
+  - User sign up and login
+  - View blog posts
+  - Create comments on posts
+    
+  ### Admin SIde:
+  - Create, read, update, and delete blog posts
+  - Publish and unpublish a post
 
-Currently, two official plugins are available:
+## Technologies Used
+  - TypeScript
+  - React.js
+  - React Router
+  - Tailwind CSS
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Screenshots
+![Screenshot 2024-10-11 102231](https://github.com/user-attachments/assets/572a88b4-5e87-470c-8e27-42197d08d35e)
 
-## Expanding the ESLint configuration
+![image](https://github.com/user-attachments/assets/ac7d4813-2a28-4b39-b198-c100d1175c98)
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+![Screenshot 2024-10-11 102026](https://github.com/user-attachments/assets/e8abfec4-656c-418c-b081-b55822197863)
