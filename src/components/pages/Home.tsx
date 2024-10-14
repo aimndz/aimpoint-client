@@ -102,7 +102,7 @@ function Home() {
         )}
 
         <main>
-          <ul className="grid grid-cols-3 gap-3 mt-5">
+          <ul className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-5">
             <PostList filteredPosts={filteredPosts} />
           </ul>
         </main>
