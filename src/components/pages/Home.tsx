@@ -80,8 +80,8 @@ function Home() {
           </em>
         </span>
         {user?.role === "ADMIN" && (
-          <div className="flex justify-between mt-5">
-            <div className="space-x-3">
+          <div className="flex justify-between mt-5 gap-3">
+            <div className="flex flex-col gap-3 md:flex-row">
               <Button
                 className={filter === "published" ? "bg-primary-800" : ""}
                 onClick={handleSetFilter}
@@ -102,7 +102,7 @@ function Home() {
         )}
 
         <main>
-          <ul className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-5">
+          <ul className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-5 pb-3">
             <PostList filteredPosts={filteredPosts} />
           </ul>
         </main>

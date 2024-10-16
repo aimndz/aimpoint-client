@@ -44,7 +44,7 @@ const Header = () => {
         <ul>
           <li>
             {user ? (
-              <div className="space-x-3">
+              <div className="flex flex-col md:flex-row justify-center items-center gap-3">
                 <span className="text-accent-100">Hello, {user.username}!</span>
                 <Button className="bg-primary-800" onClick={handleLogout}>
                   Log out
